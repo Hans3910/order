@@ -1,4 +1,4 @@
-package com.switchfully.hans.order;
+package com.switchfully.domain.hans.order;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
