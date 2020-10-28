@@ -1,4 +1,4 @@
-package com.switchfully.hans.order.api.dto;
+package com.switchfully.hans.order.api;
 
 import com.switchfully.hans.order.domain.instances.Admin;
 import com.switchfully.hans.order.service.AdminService;

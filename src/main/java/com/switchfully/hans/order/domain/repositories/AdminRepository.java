@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Repository
 public class AdminRepository {
-    private final Map<String, Admin> administrators = new HashMap<>();
+    private static final Map<String, Admin> administrators = new HashMap<>();
 
     public AdminRepository() {
         fillRepository();
@@ -25,7 +25,7 @@ public class AdminRepository {
         return new ArrayList<>(administrators.values());
     }
 
-    public Map<String, Admin> getAdministrators() {
+    public static Map<String, Admin> getAdministrators() {
         return administrators;
     }
 }
