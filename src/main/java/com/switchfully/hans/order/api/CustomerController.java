@@ -38,5 +38,4 @@ public class CustomerController {
         logger.info("Customer created with name {} {}.",
                 customerToCreate.getFirstName(), customerToCreate.getLastName());
     }
-
 }

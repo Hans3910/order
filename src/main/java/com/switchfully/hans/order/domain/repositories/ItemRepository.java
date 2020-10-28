@@ -32,4 +32,8 @@ public class ItemRepository {
     public void addBook(Item newItem) {
         items.put(newItem.getId(), newItem);
     }
+
+    public Item getById(String itemId){
+        return items.get(itemId);
+    }
 }

@@ -9,13 +9,13 @@ import java.util.HashMap;
 import java.util.Map;
 @Repository
 public class CustomerRepository {
-    private Map<String, Customer> customers = new HashMap<>();
+    private static final Map<String, Customer> customers = new HashMap<>();
 
-    public Map<String, Customer> getCustomers() {
+    public static Map<String, Customer> getCustomers() {
         return customers;
     }
 
-    public Collection<Customer> getAll() {
+    public static Collection<Customer> getAll() {
         return new ArrayList<>(customers.values());
     }
 
