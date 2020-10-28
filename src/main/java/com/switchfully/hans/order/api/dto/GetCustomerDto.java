@@ -1,4 +1,4 @@
-package api.dto;
+package com.switchfully.hans.order.api.dto;
 
 public class GetCustomerDto {
     private String id;

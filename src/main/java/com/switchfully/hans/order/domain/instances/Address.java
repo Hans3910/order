@@ -1,14 +1,14 @@
-package domain.instances;
+package com.switchfully.hans.order.domain.instances;
 
 public class Address {
     private String streetName;
-    private String number;
+    private String streetNumber;
     private int postalCode;
     private String city;
 
     public Address(String streetName, String number, int postalCode, String city) {
         this.streetName = streetName;
-        this.number = number;
+        this.streetNumber = number;
         this.postalCode = postalCode;
         this.city = city;
     }
@@ -17,8 +17,8 @@ public class Address {
         return streetName;
     }
 
-    public String getNumber() {
-        return number;
+    public String getStreetNumber() {
+        return streetNumber;
     }
 
     public int getPostalCode() {

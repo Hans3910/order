@@ -1,4 +1,4 @@
-package domain.instances;
+package com.switchfully.hans.order.domain.instances;
 
 import java.util.UUID;
 
