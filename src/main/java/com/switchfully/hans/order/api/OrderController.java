@@ -11,8 +11,10 @@ import com.switchfully.hans.order.domain.repositories.AdminRepository;
 import com.switchfully.hans.order.domain.repositories.CustomerRepository;
 import com.switchfully.hans.order.domain.repositories.ItemRepository;
 import com.switchfully.hans.order.domain.repositories.OrderRepository;
+import com.switchfully.hans.order.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -27,19 +29,22 @@ import java.util.stream.Collectors;
 public class OrderController {
 
     private final Logger logger = LoggerFactory.getLogger(Order.class);
-    // HIER VERDERGAAN!! NIET AF
+    private OrderService orderService;
+
+    @Autowired
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public Collection<GetOrderDto> getAllOrders(){
         logger.info("List of all Orders was requested.");
-        return OrderRepository.getOrders().values().stream()
-                .map(order -> new GetOrderDto()
-                        .setOrderID(order.getOrderId())
-                        .setItemGroups(order.getItemGroups()))
-                .collect(Collectors.toList());
+        return orderService.getOrderList();
+
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    /*@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void createOrder(CreateItemGroupDto [] order, @RequestBody ItemRepository itemRepository, @RequestParam(required = false) String customerId) throws NotAuthorizedException {
         if (customerId == null || customerId.isBlank() || !CustomerRepository.getCustomers().containsKey(customerId)) {
@@ -48,12 +53,14 @@ public class OrderController {
 
         List<ItemGroup> itemGroupsInOrder = new ArrayList<>();
         Order newOrder = new Order(itemGroupsInOrder);
+        double totalOrderPrice = 0;
         for (CreateItemGroupDto createItemGroupDto : order ) {
-            ItemGroup itemGroupToAdd = new ItemGroup(createItemGroupDto.getOrderedItemID(), createItemGroupDto.getOrderedItemAmount(), itemRepository);
+            ItemGroup itemGroupToAdd = new ItemGroup(createItemGroupDto.getOrderedItemID(), createItemGroupDto.getOrderedItemAmount());
             newOrder.getItemGroups().add(itemGroupToAdd);
+
         }
         OrderRepository.getOrders().put(newOrder.getOrderId(), newOrder);
-    }
+    }*/
 
 
 }

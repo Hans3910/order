@@ -32,6 +32,10 @@ public class ItemService {
         return itemRepository.getAll();
     }
 
+    public static Item getItemById(String itemID){
+        return ItemRepository.getById(itemID);
+    }
+
     public List<GetItemDto> getItemList() {
         return getAll().stream()
                 .map(item -> new GetItemDto()

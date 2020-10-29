@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Repository
 public class ItemRepository {
-    private final Map<String, Item> items = new HashMap<>();
+    private static final Map<String, Item> items = new HashMap<>();
 
     public ItemRepository() {
         fillRepository();
@@ -33,7 +33,27 @@ public class ItemRepository {
         items.put(newItem.getId(), newItem);
     }
 
-    public Item getById(String itemId){
+    public static Item getById(String itemId){
         return items.get(itemId);
+    }
+
+    public void addNewItem(Item newItemToAdd){
+        items.put(newItemToAdd.getId(), newItemToAdd);
+    }
+
+    public Item getItemById(String itemId){
+        return items.get(itemId);
+    }
+
+    public boolean itemExists(String itemId){
+        return items.get(itemId) != null;
+    }
+
+    public double getPrice(String itemId){
+        return items.get(itemId).getPrice();
+    }
+
+    public double getItemAmountInStock(String itemId){
+        return items.get(itemId).getAmountInStock();
     }
 }

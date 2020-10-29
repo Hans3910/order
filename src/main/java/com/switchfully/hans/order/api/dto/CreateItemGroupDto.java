@@ -1,15 +1,15 @@
 package com.switchfully.hans.order.api.dto;
 
-import com.switchfully.hans.order.domain.instances.Item;
-import com.switchfully.hans.order.domain.repositories.ItemRepository;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import java.time.LocalDate;
-
 public class CreateItemGroupDto {
+    private String orderId;
     private String orderedItemID;
     private double orderedItemAmount;
 
+    public CreateItemGroupDto(String orderId, String orderedItemID, double orderedItemAmount) {
+        this.orderId = orderId;
+        this.orderedItemID = orderedItemID;
+        this.orderedItemAmount = orderedItemAmount;
+    }
 
     public String getOrderedItemID() {
         return orderedItemID;
@@ -26,6 +26,15 @@ public class CreateItemGroupDto {
 
     public CreateItemGroupDto setOrderedItemAmount(double orderedItemAmount) {
         this.orderedItemAmount = orderedItemAmount;
+        return this;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public CreateItemGroupDto setOrderId(String orderId) {
+        this.orderId = orderId;
         return this;
     }
 }
