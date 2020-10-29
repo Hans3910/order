@@ -2,7 +2,9 @@ package com.switchfully.hans.order.api;
 
 import com.switchfully.hans.order.api.dto.CreateItemDto;
 import com.switchfully.hans.order.api.dto.GetItemDto;
+import com.switchfully.hans.order.api.mapper.ItemMapper;
 import com.switchfully.hans.order.domain.exceptions.NotAuthorizedException;
+import com.switchfully.hans.order.domain.instances.Item;
 import com.switchfully.hans.order.service.ItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,11 +33,10 @@ public class ItemController {
         return itemService.getItemList();
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createBook(@RequestBody CreateItemDto createItemDto, @RequestParam(required = false) String adminId) throws NotAuthorizedException {
-        itemService.checkAdminId(adminId);
-        itemService.createNewItem(createItemDto);
-        logger.info("New Book created.");
+    @PostMapping
+    public Item addNewItem(@RequestBody CreateItemDto newItemDto){
+        Item newItem = ItemMapper.convertNewItemDtoToItem(newItemDto);
+        itemService.addNewItem(newItem);
+        return newItem;
     }
 }

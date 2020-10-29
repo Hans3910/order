@@ -8,25 +8,15 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 public class ItemGroup {
-    private String groupID;
     private final String selectedItemId;
     private final double amountOrdered;
     private LocalDate shippingDate;
 
     public ItemGroup(String selectedItemId, double amountOrdered) {
-        this.groupID = UUID.randomUUID().toString();
         this.selectedItemId = selectedItemId;
         this.amountOrdered = amountOrdered;
+        this.shippingDate = LocalDate.now().plusWeeks(1);
     }
-
-    /*public void setShippingDate(@RequestBody ItemRepository itemRepository) {
-       Item itemToCheck = ItemRepository.getById(selectedItemId);
-        if(itemToCheck.getAmountInStock() >= amountOrdered){
-            this.shippingDate = LocalDate.now().plusDays(1);
-        } else {
-            this.shippingDate = LocalDate.now().plusDays(7);
-        }
-    }*/
 
     public String getSelectedItemId() {
         return selectedItemId;
@@ -34,5 +24,13 @@ public class ItemGroup {
 
     public double getAmountOrdered() {
         return amountOrdered;
+    }
+
+    public LocalDate getShippingDate() {
+        return shippingDate;
+    }
+
+    public void setShippingDate(LocalDate shippingDate) {
+        this.shippingDate = shippingDate;
     }
 }

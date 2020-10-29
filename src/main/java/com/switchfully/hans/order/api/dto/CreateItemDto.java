@@ -6,6 +6,13 @@ public class CreateItemDto {
     private double price;
     private double amountInStock;
 
+    public CreateItemDto(String name, String description, double price, double amountInStock) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.amountInStock = amountInStock;
+    }
+
     public String getName() {
         return name;
     }

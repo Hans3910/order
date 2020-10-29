@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Repository
 public class AdminRepository {
-    private static final Map<String, Admin> administrators = new HashMap<>();
+    private Map<String, Admin> administrators = new HashMap<>();
 
     public AdminRepository() {
         fillRepository();
@@ -25,7 +25,11 @@ public class AdminRepository {
         return new ArrayList<>(administrators.values());
     }
 
-    public static Map<String, Admin> getAdministrators() {
+    public Map<String, Admin> getAdministrators() {
         return administrators;
+    }
+
+    public boolean checkIfAdmin(String userId){
+        return administrators.get(userId) != null;
     }
 }

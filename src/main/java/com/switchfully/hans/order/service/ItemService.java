@@ -10,6 +10,7 @@ import com.switchfully.hans.order.domain.repositories.AdminRepository;
 import com.switchfully.hans.order.domain.repositories.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Collection;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class ItemService {
     private final ItemRepository itemRepository;
+    private AdminRepository adminRepository;
 
     @Autowired
     public ItemService(ItemRepository itemRepository) {
@@ -32,10 +34,6 @@ public class ItemService {
         return itemRepository.getAll();
     }
 
-    public static Item getItemById(String itemID){
-        return ItemRepository.getById(itemID);
-    }
-
     public List<GetItemDto> getItemList() {
         return getAll().stream()
                 .map(item -> new GetItemDto()
@@ -47,14 +45,13 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
-    public void checkAdminId(String adminId) throws NotAuthorizedException {
-        if (adminId == null || adminId.isBlank() || !AdminRepository.getAdministrators().containsKey(adminId)) {
+    public void checkAdminId(String adminId, @RequestBody AdminRepository adminRepository) throws NotAuthorizedException {
+        if (adminId == null || adminId.isBlank() || !adminRepository.getAdministrators().containsKey(adminId)) {
             throw new NotAuthorizedException(Admin.class, "AdminId", adminId);
         }
     }
 
-    public void createNewItem(CreateItemDto createItemDto) {
-        Item newItem = new Item(createItemDto.getName(), createItemDto.getDescription(), createItemDto.getPrice(), createItemDto.getAmountInStock());
-        addItem(newItem);
+    public void addNewItem(Item newItemToAdd){
+        itemRepository.addNewItem(newItemToAdd);
     }
 }

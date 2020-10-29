@@ -1,66 +1,67 @@
 package com.switchfully.hans.order.service;
 
-import com.switchfully.hans.order.api.dto.CreateItemGroupDto;
 import com.switchfully.hans.order.api.dto.GetOrderDto;
 import com.switchfully.hans.order.domain.instances.ItemGroup;
 import com.switchfully.hans.order.domain.instances.Order;
+import com.switchfully.hans.order.domain.repositories.CustomerRepository;
 import com.switchfully.hans.order.domain.repositories.ItemRepository;
 import com.switchfully.hans.order.domain.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
     private OrderRepository orderRepository;
+    private CustomerRepository customerRepository;
     private ItemRepository itemRepository;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, ItemRepository itemRepository) {
+    public OrderService(OrderRepository orderRepository, ItemRepository itemRepository, CustomerRepository customerRepository) {
         this.orderRepository = orderRepository;
         this.itemRepository = itemRepository;
+        this.customerRepository = customerRepository;
     }
 
     public List<Order> getAll() {
         return orderRepository.getAll();
     }
 
-    public List<GetOrderDto> getOrderList() {
-        List<Order> orders = getAll();
+    public Order createOrder(String customerId, List<ItemGroup> orderItems){
+        List<ItemGroup> orders = assignShippingDates(orderItems);
+        double newOrderTotalCostInEuros = calculateTotalCost(orders);
 
-        List<GetOrderDto> list = new ArrayList<>();
-        for (Order order : orders) {
-            GetOrderDto getOrderDto = new GetOrderDto(order.getOrderId(), new ArrayList<>());
-            for (int j = 0; j < order.getItemGroups().size(); j++) {
-                CreateItemGroupDto createItemGroupDto = new CreateItemGroupDto(order.getOrderId(), order.getItemGroups().get(j).getSelectedItemId(), order.getItemGroups().get(j).getAmountOrdered());
-                getOrderDto.getItemGroups().add(createItemGroupDto);
-                getOrderDto.setTotalOrderPrice(calculate());
+        Order newOrder = new Order(orders, customerId, newOrderTotalCostInEuros);
+        orderRepository.createOrder(newOrder);
+
+        return newOrder;
+    }
+
+    private List<ItemGroup> assignShippingDates(List<ItemGroup> orderItems){
+
+        for(ItemGroup itemGroup : orderItems){
+            if(checkIfItemInStock(itemGroup)){
+                itemGroup.setShippingDate(LocalDate.now().plusDays(1));
             }
-
-            list.add(getOrderDto);
         }
-        return list;
-    }
-
-    public double calculate(){
-        List<List<ItemGroup>> itemGroups = orderRepository.getOrders().values()
-                .stream()
-                .map(Order::getItemGroups)
-                .collect(Collectors.toList());
-
-        List<ItemGroup> list = new ArrayList<>();
-        for (List<ItemGroup> itemGroup : itemGroups) {
-            list.addAll(itemGroup);
-        }
-
-        return list.stream()
-                .mapToDouble(itemGroup -> itemGroup.getAmountOrdered() * ItemService.getItemById(itemGroup.getSelectedItemId()).getPrice())
-                .sum();
+        return orderItems;
     }
 
 
+    private double calculateTotalCost(List<ItemGroup> orderItems){
+        return orderItems.stream()
+                .map(itemGroup -> itemRepository.getPrice(itemGroup.getSelectedItemId()) * itemGroup.getAmountOrdered())
+                .reduce(0.0, Double::sum);
+    }
+
+    private boolean checkIfItemInStock(ItemGroup itemGroup) {
+        return itemRepository.getItemAmountInStock(itemGroup.getSelectedItemId()) >= itemGroup.getAmountOrdered();
+    }
 
 
+    public Collection<Order> getOrderList() {
+        return orderRepository.getAll();
+    }
 }

@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Repository
 public class ItemRepository {
-    private static final Map<String, Item> items = new HashMap<>();
+    private final Map<String, Item> items = new HashMap<>();
 
     public ItemRepository() {
         fillRepository();
@@ -31,10 +31,6 @@ public class ItemRepository {
 
     public void addBook(Item newItem) {
         items.put(newItem.getId(), newItem);
-    }
-
-    public static Item getById(String itemId){
-        return items.get(itemId);
     }
 
     public void addNewItem(Item newItemToAdd){

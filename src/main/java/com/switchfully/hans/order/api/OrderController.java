@@ -2,6 +2,7 @@ package com.switchfully.hans.order.api;
 
 import com.switchfully.hans.order.api.dto.CreateItemGroupDto;
 import com.switchfully.hans.order.api.dto.GetOrderDto;
+import com.switchfully.hans.order.api.mapper.ItemGroupMapper;
 import com.switchfully.hans.order.domain.exceptions.NotAuthorizedException;
 import com.switchfully.hans.order.domain.instances.Admin;
 import com.switchfully.hans.order.domain.instances.Customer;
@@ -30,6 +31,7 @@ public class OrderController {
 
     private final Logger logger = LoggerFactory.getLogger(Order.class);
     private OrderService orderService;
+    private OrderRepository orderRepository;
 
     @Autowired
     public OrderController(OrderService orderService) {
@@ -38,29 +40,17 @@ public class OrderController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public Collection<GetOrderDto> getAllOrders(){
+    public Collection<Order> getAllOrders(){
         logger.info("List of all Orders was requested.");
         return orderService.getOrderList();
 
     }
 
-    /*@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createOrder(CreateItemGroupDto [] order, @RequestBody ItemRepository itemRepository, @RequestParam(required = false) String customerId) throws NotAuthorizedException {
-        if (customerId == null || customerId.isBlank() || !CustomerRepository.getCustomers().containsKey(customerId)) {
-            throw new NotAuthorizedException(Customer.class, "CustomerId", customerId);
-        }
-
-        List<ItemGroup> itemGroupsInOrder = new ArrayList<>();
-        Order newOrder = new Order(itemGroupsInOrder);
-        double totalOrderPrice = 0;
-        for (CreateItemGroupDto createItemGroupDto : order ) {
-            ItemGroup itemGroupToAdd = new ItemGroup(createItemGroupDto.getOrderedItemID(), createItemGroupDto.getOrderedItemAmount());
-            newOrder.getItemGroups().add(itemGroupToAdd);
-
-        }
-        OrderRepository.getOrders().put(newOrder.getOrderId(), newOrder);
-    }*/
+    @PostMapping
+    public Order createOrder(@RequestHeader String customerId, @RequestBody List<CreateItemGroupDto> orderItemsDto){
+        List<ItemGroup> orderItems = ItemGroupMapper.convertToList(orderItemsDto);
+        return orderService.createOrder(customerId, orderItems);
+    }
 
 
 }
