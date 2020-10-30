@@ -31,9 +31,9 @@ public class OrderService {
 
     public Order createOrder(String customerId, List<ItemGroup> orderItems){
         List<ItemGroup> orders = assignShippingDates(orderItems);
-        double newOrderTotalCostInEuros = calculateTotalCost(orders);
+        double totalCost = calculateTotalCost(orders);
 
-        Order newOrder = new Order(orders, customerId, newOrderTotalCostInEuros);
+        Order newOrder = new Order(orders, customerId, totalCost);
         orderRepository.createOrder(newOrder);
 
         return newOrder;

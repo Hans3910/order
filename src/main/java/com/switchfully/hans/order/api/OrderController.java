@@ -47,7 +47,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public Order createOrder(@RequestHeader String customerId, @RequestBody List<CreateItemGroupDto> orderItemsDto){
+    public Order createOrder(@RequestParam String customerId, @RequestBody List<CreateItemGroupDto> orderItemsDto){
         List<ItemGroup> orderItems = ItemGroupMapper.convertToList(orderItemsDto);
         return orderService.createOrder(customerId, orderItems);
     }

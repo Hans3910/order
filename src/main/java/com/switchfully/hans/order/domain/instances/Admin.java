@@ -7,8 +7,4 @@ public class Admin extends Person{
         super(firstName, lastName);
         this.email = email;
     }
-
-    public String getEmail() {
-        return email;
-    }
 }

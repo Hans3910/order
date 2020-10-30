@@ -17,4 +17,8 @@ public class CustomerRepository {
         return new ArrayList<>(customers.values());
     }
 
+    public Customer getById(String id) {
+        return customers.get(id);
+    }
+
 }

@@ -5,6 +5,7 @@ import com.switchfully.hans.order.api.dto.GetItemDto;
 import com.switchfully.hans.order.api.mapper.ItemMapper;
 import com.switchfully.hans.order.domain.exceptions.NotAuthorizedException;
 import com.switchfully.hans.order.domain.instances.Item;
+import com.switchfully.hans.order.domain.repositories.AdminRepository;
 import com.switchfully.hans.order.service.ItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +21,12 @@ import java.util.Collection;
 public class ItemController {
     private final Logger logger = LoggerFactory.getLogger(ItemController.class);
     private final ItemService itemService;
+    private final AdminRepository adminRepository;
 
     @Autowired
-    public ItemController(ItemService itemService)  {
+    public ItemController(ItemService itemService, AdminRepository adminRepository)  {
         this.itemService = itemService;
+        this.adminRepository = adminRepository;
     }
 
     @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -34,7 +37,8 @@ public class ItemController {
     }
 
     @PostMapping
-    public Item addNewItem(@RequestBody CreateItemDto newItemDto){
+    public Item addNewItem(@RequestBody CreateItemDto newItemDto, @RequestParam(required = false) String adminId) throws NotAuthorizedException {
+        adminRepository.checkAdminId(adminId);
         Item newItem = ItemMapper.convertNewItemDtoToItem(newItemDto);
         itemService.addNewItem(newItem);
         return newItem;

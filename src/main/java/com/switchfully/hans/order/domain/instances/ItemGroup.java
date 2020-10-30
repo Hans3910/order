@@ -26,10 +26,6 @@ public class ItemGroup {
         return amountOrdered;
     }
 
-    public LocalDate getShippingDate() {
-        return shippingDate;
-    }
-
     public void setShippingDate(LocalDate shippingDate) {
         this.shippingDate = shippingDate;
     }
