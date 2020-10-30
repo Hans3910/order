@@ -43,8 +43,17 @@ public class OrderController {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderDto createNewEmptyOrderWithStatusCreated(@RequestBody OrderDto orderDTO) {
-        return orderService.registerOrder(orderDTO);
+    public Order createNewOrder(@RequestBody OrderDto orderDTO, @RequestParam String customerId) {
+        Order newOrder = new Order(customerId);
+        double totalCost = 0;
+        for (ItemGroup itemGroup : orderDTO.getItemGroups()) {
+            newOrder.getItemGroups().add(itemGroup);
+            totalCost += itemGroup.getPrice() * itemGroup.getAmount();
+        }
+        newOrder.setItemGroups(orderDTO.getItemGroups());
+        newOrder.setTotalPrice(totalCost);
+        orderService.registerOrder(orderDTO);
+        return newOrder;
     }
 
     @PutMapping(path = "/customer/place-order/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

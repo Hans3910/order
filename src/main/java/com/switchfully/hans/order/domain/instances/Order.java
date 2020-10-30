@@ -1,6 +1,5 @@
 package com.switchfully.hans.order.domain.instances;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +21,7 @@ public class Order {
 
     public void addItemGroup(ItemGroup itemGroup) {
         itemGroups.add(itemGroup);
-        totalPrice += itemGroup.getOrderPrice() * itemGroup.getAmount();
+        totalPrice += itemGroup.getPrice() * itemGroup.getAmount();
     }
 
     public String getOrderId() {

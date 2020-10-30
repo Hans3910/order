@@ -1,7 +1,5 @@
 package com.switchfully.hans.order.domain.instances;
 
-import com.switchfully.hans.order.domain.exceptions.CreationFailedException;
-
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
@@ -11,14 +9,14 @@ public class ItemGroup {
     private String itemGroupId;
     private String itemId;
     private int amount;
-    private double orderPrice;
+    private double price;
     private LocalDate shippingDate;
 
     public ItemGroup(String orderId, String itemId, int amount, double orderPrice, LocalDate shippingDate) {
         this.orderId = orderId;
         this.itemId = itemId;
         this.amount = amount;
-        this.orderPrice = orderPrice;
+        this.price = orderPrice;
         this.shippingDate = shippingDate;
         this.itemGroupId = UUID.randomUUID().toString();
     }
@@ -55,12 +53,12 @@ public class ItemGroup {
         this.amount = amount;
     }
 
-    public double getOrderPrice() {
-        return orderPrice;
+    public double getPrice() {
+        return price;
     }
 
-    public void setOrderPrice(double orderPrice) {
-        this.orderPrice = orderPrice;
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public LocalDate getShippingDate() {

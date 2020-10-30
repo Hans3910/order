@@ -24,7 +24,7 @@ public class ItemGroupMapper {
         result.setOrderId(itemGroup.getOrderId());
         result.setItemId(itemGroup.getItemId());
         result.setAmount(itemGroup.getAmount());
-        result.setOrderPrice(itemGroup.getOrderPrice());
+        result.setOrderPrice(itemGroup.getPrice());
         result.setShippingDate(itemGroup.getShippingDate());
         result.setItemGroupId(itemGroup.getItemGroupId());
         return result;
