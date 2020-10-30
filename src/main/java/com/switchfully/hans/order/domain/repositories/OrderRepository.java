@@ -1,48 +1,52 @@
 package com.switchfully.hans.order.domain.repositories;
 
 
+import com.switchfully.hans.order.domain.exceptions.CreationFailedException;
+import com.switchfully.hans.order.domain.exceptions.OrderAlreadyExistsException;
+import com.switchfully.hans.order.domain.exceptions.OrderNotFoundException;
 import com.switchfully.hans.order.domain.instances.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @Repository
 public class OrderRepository {
-    private Map<String, Order> orders = new HashMap<>();
 
+    private final Map<String, Order> orders;
+
+    @Autowired
     public OrderRepository() {
-        fillRepository();
+        this.orders = new HashMap<>();
     }
 
-    public List<Order> getAll() {
-        return new ArrayList<>(orders.values());
+    public Order save(Order order) {
+        if (orders.containsValue(order))
+            throw new OrderAlreadyExistsException(
+                    "Order with id"
+                            + order.getOrderId()
+                            + " already exists.");
+        orders.put(order.getOrderId(), order);
+
+        return order;
     }
 
-    public Map<String, Order> getOrders() {
+    public Order getOrder(String orderId) {
+        Order item = orders.get(orderId);
+        if (Objects.isNull(item)) {
+            throw new OrderNotFoundException("There is no order available with the id " + orderId);
+        }
+        return item;
+    }
+
+    public Map<String, Order> getOrderMap() {
         return orders;
     }
 
-    public void createOrder(Order newOrder){
-        orders.put(newOrder.getOrderId(), newOrder);
+
+
+    public List<Order> getOrders() {
+        return new ArrayList<>(orders.values());
     }
-
-
-
-    private void fillRepository() {
-        Address address = new Address("kerkstaat", "12", 3500, "Hasselt");
-        Customer customer = new Customer("Hans", "Hendrickx", "hans@hans.com", address, "049653369");
-        Item item = new Item("steol", "mooi stoel", 25.0, 30.0);
-        Item item2 = new Item("tafel", "mooi tafel", 25.0, 30.0);
-        ItemGroup itemGroup = new ItemGroup(item.getId(), 10);
-        ItemGroup itemGroup1 = new ItemGroup(item2.getId(), 36);
-        List<ItemGroup> items = new ArrayList<>();
-        items.add(itemGroup);
-        items.add(itemGroup1);
-        Order order1 = new Order(items, customer.getId(), 100.0 );
-        orders.put(order1.getOrderId(), order1);
-    }
-
-
-
 }

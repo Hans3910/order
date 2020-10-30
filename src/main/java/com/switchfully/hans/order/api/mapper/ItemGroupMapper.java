@@ -1,16 +1,32 @@
 package com.switchfully.hans.order.api.mapper;
 
-import com.switchfully.hans.order.api.dto.CreateItemGroupDto;
+import com.switchfully.hans.order.api.dto.ItemGroupDTO;
 import com.switchfully.hans.order.domain.instances.ItemGroup;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.time.LocalDate;
 
+@Component
 public class ItemGroupMapper {
-    public static List<ItemGroup> convertToList(List<CreateItemGroupDto> dtoToConvert){
-        return dtoToConvert.stream()
-                .map(itemGroupDto -> new ItemGroup(itemGroupDto.getOrderedItemID(), itemGroupDto.getOrderedItemAmount()))
-                .collect(Collectors.toList());
+    public ItemGroup createItemGroup(ItemGroupDTO itemGroupDTO, LocalDate shippingDate) {
+        ItemGroup result = new ItemGroup(
+                itemGroupDTO.getOrderId(),
+                itemGroupDTO.getItemId(),
+                itemGroupDTO.getAmount(),
+                itemGroupDTO.getOrderPrice(),
+                shippingDate
+        );
+        return result;
     }
 
+    public ItemGroupDTO detailDTO(ItemGroup itemGroup) {
+        ItemGroupDTO result = new ItemGroupDTO();
+        result.setOrderId(itemGroup.getOrderId());
+        result.setItemId(itemGroup.getItemId());
+        result.setAmount(itemGroup.getAmount());
+        result.setOrderPrice(itemGroup.getOrderPrice());
+        result.setShippingDate(itemGroup.getShippingDate());
+        result.setItemGroupId(itemGroup.getItemGroupId());
+        return result;
+    }
 }

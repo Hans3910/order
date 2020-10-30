@@ -1,47 +1,61 @@
 package com.switchfully.hans.order.api.dto;
 
-import com.switchfully.hans.order.domain.instances.ItemGroup;
-import com.switchfully.hans.order.service.ItemService;
-import org.springframework.web.bind.annotation.RequestBody;
 
+import com.switchfully.hans.order.domain.instances.ItemGroup;
+
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
 public class GetOrderDto {
-    private String orderID;
-    private List<CreateItemGroupDto> itemGroups;
-    private double totalOrderPrice;
+    private String orderId;
+    private String customerId;
+    private List<ItemGroup> itemGroups;
+    private double totalPrice;
+    private LocalDate shippingDate;
 
-
-    public GetOrderDto(String orderID, List<CreateItemGroupDto> itemGroups) {
-        this.orderID = orderID;
-        this.itemGroups = itemGroups;
+    public LocalDate getShippingDate() {
+        return shippingDate;
     }
 
-    public String getOrderID() {
-        return orderID;
-    }
-
-    public GetOrderDto setOrderID(String orderID) {
-        this.orderID = orderID;
+    public GetOrderDto setShippingDate(LocalDate shippingDate) {
+        this.shippingDate = shippingDate;
         return this;
     }
 
-    public Collection<CreateItemGroupDto> getItemGroups() {
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public GetOrderDto setOrderId(String orderId) {
+        this.orderId = orderId;
+        return this;
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public GetOrderDto setCustomerId(String customerId) {
+        this.customerId = customerId;
+        return this;
+    }
+
+    public List<ItemGroup> getItemGroups() {
         return itemGroups;
     }
 
-    public GetOrderDto setItemGroups(List<CreateItemGroupDto> itemGroups) {
+    public GetOrderDto setItemGroups(List<ItemGroup> itemGroups) {
         this.itemGroups = itemGroups;
         return this;
     }
 
-    public double getTotalOrderPrice() {
-        return totalOrderPrice;
+    public double getTotalPrice() {
+        return totalPrice;
     }
 
-    public GetOrderDto setTotalOrderPrice(double totalOrderPrice) {
-        this.totalOrderPrice = totalOrderPrice;
+    public GetOrderDto setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
         return this;
     }
 

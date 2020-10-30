@@ -2,9 +2,9 @@ package com.switchfully.hans.order.domain.instances;
 
 public class Customer extends Person {
 
-    private String email;
-    private Address address;
-    private String phoneNumber;
+    private final String email;
+    private final Address address;
+    private final String phoneNumber;
 
 
     public Customer(String firstName, String lastName, String email, Address address, String phoneNumber) {

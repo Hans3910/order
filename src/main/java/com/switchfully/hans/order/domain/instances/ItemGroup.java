@@ -1,32 +1,86 @@
 package com.switchfully.hans.order.domain.instances;
 
-import com.switchfully.hans.order.api.dto.CreateItemGroupDto;
-import com.switchfully.hans.order.domain.repositories.ItemRepository;
-import org.springframework.web.bind.annotation.RequestBody;
+import com.switchfully.hans.order.domain.exceptions.CreationFailedException;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ItemGroup {
-    private final String selectedItemId;
-    private final double amountOrdered;
+    private String orderId;
+    private String itemGroupId;
+    private String itemId;
+    private int amount;
+    private double orderPrice;
     private LocalDate shippingDate;
 
-    public ItemGroup(String selectedItemId, double amountOrdered) {
-        this.selectedItemId = selectedItemId;
-        this.amountOrdered = amountOrdered;
-        this.shippingDate = LocalDate.now().plusWeeks(1);
+    public ItemGroup(String orderId, String itemId, int amount, double orderPrice, LocalDate shippingDate) {
+        this.orderId = orderId;
+        this.itemId = itemId;
+        this.amount = amount;
+        this.orderPrice = orderPrice;
+        this.shippingDate = shippingDate;
+        this.itemGroupId = UUID.randomUUID().toString();
     }
 
-    public String getSelectedItemId() {
-        return selectedItemId;
+    public String getOrderId() {
+        return orderId;
     }
 
-    public double getAmountOrdered() {
-        return amountOrdered;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getItemGroupId() {
+        return itemGroupId;
+    }
+
+    public void setItemGroupId(String itemGroupId) {
+        this.itemGroupId = itemGroupId;
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public double getOrderPrice() {
+        return orderPrice;
+    }
+
+    public void setOrderPrice(double orderPrice) {
+        this.orderPrice = orderPrice;
+    }
+
+    public LocalDate getShippingDate() {
+        return shippingDate;
     }
 
     public void setShippingDate(LocalDate shippingDate) {
         this.shippingDate = shippingDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ItemGroup)) return false;
+        ItemGroup itemGroup = (ItemGroup) o;
+        return getItemGroupId().equals(itemGroup.getItemGroupId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getItemGroupId());
     }
 }

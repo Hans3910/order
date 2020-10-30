@@ -44,14 +44,9 @@ public class ItemService {
                         .setAmountInStock(item.getAmountInStock()))
                 .collect(Collectors.toList());
     }
-
-    public void checkAdminId(String adminId, @RequestBody AdminRepository adminRepository) throws NotAuthorizedException {
-        if (adminId == null || adminId.isBlank() || !adminRepository.getAdministrators().containsKey(adminId)) {
-            throw new NotAuthorizedException(Admin.class, "AdminId", adminId);
-        }
-    }
-
     public void addNewItem(Item newItemToAdd){
         itemRepository.addNewItem(newItemToAdd);
     }
+
+
 }

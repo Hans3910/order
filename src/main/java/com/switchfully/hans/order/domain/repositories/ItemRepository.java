@@ -1,5 +1,6 @@
 package com.switchfully.hans.order.domain.repositories;
 
+import com.switchfully.hans.order.domain.exceptions.EntityNotFoundException;
 import com.switchfully.hans.order.domain.instances.Item;
 import org.springframework.stereotype.Repository;
 
@@ -41,15 +42,19 @@ public class ItemRepository {
         return items.get(itemId);
     }
 
-    public boolean itemExists(String itemId){
-        return items.get(itemId) != null;
+    public double getPrice(String itemID, int amount) {
+        return (items.get(itemID).getPrice() * amount);
     }
 
-    public double getPrice(String itemId){
-        return items.get(itemId).getPrice();
+    public double getStock(String itemID) {
+        return items.get(itemID).getAmountInStock();
     }
 
     public double getItemAmountInStock(String itemId){
         return items.get(itemId).getAmountInStock();
+    }
+
+    public void checkItemId(String itemID) {
+        if(!items.containsKey(itemID)) throw new EntityNotFoundException(Item.class, "Item id does not exist", itemID);
     }
 }

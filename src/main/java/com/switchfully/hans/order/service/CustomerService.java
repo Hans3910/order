@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
-    private CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
     @Autowired
     public CustomerService(CustomerRepository customerRepository) {
@@ -24,11 +24,11 @@ public class CustomerService {
     }
 
     public Collection<Customer> getAll() {
-        return customerRepository.getAllCustomers();
+        return CustomerRepository.getAllCustomers();
     }
 
     public void addCustomer(Customer customer){
-        customerRepository.getCustomers().put(customer.getId(), customer);
+        CustomerRepository.getCustomers().put(customer.getId(), customer);
     }
 
     public Customer getById(String id) {

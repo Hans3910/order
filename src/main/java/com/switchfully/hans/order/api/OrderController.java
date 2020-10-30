@@ -1,17 +1,11 @@
 package com.switchfully.hans.order.api;
 
-import com.switchfully.hans.order.api.dto.CreateItemGroupDto;
+
 import com.switchfully.hans.order.api.dto.GetOrderDto;
-import com.switchfully.hans.order.api.mapper.ItemGroupMapper;
-import com.switchfully.hans.order.domain.exceptions.NotAuthorizedException;
-import com.switchfully.hans.order.domain.instances.Admin;
-import com.switchfully.hans.order.domain.instances.Customer;
+import com.switchfully.hans.order.api.dto.OrderDto;
+import com.switchfully.hans.order.domain.exceptions.CreationFailedException;
 import com.switchfully.hans.order.domain.instances.ItemGroup;
 import com.switchfully.hans.order.domain.instances.Order;
-import com.switchfully.hans.order.domain.repositories.AdminRepository;
-import com.switchfully.hans.order.domain.repositories.CustomerRepository;
-import com.switchfully.hans.order.domain.repositories.ItemRepository;
-import com.switchfully.hans.order.domain.repositories.OrderRepository;
 import com.switchfully.hans.order.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,10 +22,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(path = "/orders")
 public class OrderController {
-
-    private final Logger logger = LoggerFactory.getLogger(Order.class);
-    private OrderService orderService;
-    private OrderRepository orderRepository;
+    private final OrderService orderService;
 
     @Autowired
     public OrderController(OrderService orderService) {
@@ -40,17 +31,25 @@ public class OrderController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public Collection<Order> getAllOrders(){
-        logger.info("List of all Orders was requested.");
-        return orderService.getOrderList();
-
+    public List<OrderDto> adminViewsAllOrders() {
+        return orderService.getAllOrderDTOs();
     }
 
-    @PostMapping
-    public Order createOrder(@RequestParam String customerId, @RequestBody List<CreateItemGroupDto> orderItemsDto){
-        List<ItemGroup> orderItems = ItemGroupMapper.convertToList(orderItemsDto);
-        return orderService.createOrder(customerId, orderItems);
+    @GetMapping(path = "/customer", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public List<OrderDto> customerViewsAllHisOrders(@PathVariable String customerId) {
+        return orderService.getAllMyOrderDTOs(customerId);
     }
 
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public OrderDto createNewEmptyOrderWithStatusCreated(@RequestBody OrderDto orderDTO) {
+        return orderService.registerOrder(orderDTO);
+    }
 
+    @PutMapping(path = "/customer/place-order/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public OrderDto updateOrderStatusFromCreatedToOrdered(@PathVariable String id) {
+        return orderService.placeOrder(id);
+    }
 }

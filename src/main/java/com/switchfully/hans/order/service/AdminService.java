@@ -23,10 +23,4 @@ public class AdminService {
         return adminRepository.getAll();
     }
 
-    private void checkAdminId(@RequestParam(required = false) String adminId) throws NotAuthorizedException {
-        if (adminId == null || adminId.isBlank() || !adminRepository.getAdministrators().containsKey(adminId)) {
-            throw new NotAuthorizedException(Admin.class, "librarianId", adminId);
-        }
-    }
-
 }

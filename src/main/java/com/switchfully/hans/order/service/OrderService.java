@@ -1,6 +1,10 @@
 package com.switchfully.hans.order.service;
 
 import com.switchfully.hans.order.api.dto.GetOrderDto;
+import com.switchfully.hans.order.api.dto.OrderDto;
+import com.switchfully.hans.order.api.mapper.OrderMapper;
+import com.switchfully.hans.order.domain.exceptions.CreationFailedException;
+import com.switchfully.hans.order.domain.exceptions.OrderNotFoundException;
 import com.switchfully.hans.order.domain.instances.ItemGroup;
 import com.switchfully.hans.order.domain.instances.Order;
 import com.switchfully.hans.order.domain.repositories.CustomerRepository;
@@ -11,57 +15,47 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
-    private OrderRepository orderRepository;
-    private CustomerRepository customerRepository;
-    private ItemRepository itemRepository;
+    private final OrderRepository orderRepository;
+    private final OrderMapper orderMapper;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, ItemRepository itemRepository, CustomerRepository customerRepository) {
+    public OrderService(
+            OrderRepository orderRepository,
+            OrderMapper orderMapper) {
         this.orderRepository = orderRepository;
-        this.itemRepository = itemRepository;
-        this.customerRepository = customerRepository;
+        this.orderMapper = orderMapper;
     }
 
-    public List<Order> getAll() {
-        return orderRepository.getAll();
+    public List<OrderDto> getAllOrderDTOs() {
+        return orderRepository.getOrders().stream()
+                .map(orderMapper::detailDTO)
+                .collect(Collectors.toList());
     }
 
-    public Order createOrder(String customerId, List<ItemGroup> orderItems){
-        List<ItemGroup> orders = assignShippingDates(orderItems);
-        double totalCost = calculateTotalCost(orders);
-
-        Order newOrder = new Order(orders, customerId, totalCost);
-        orderRepository.createOrder(newOrder);
-
-        return newOrder;
+    public List<OrderDto> getAllMyOrderDTOs(String customerId) {
+        return orderRepository.getOrders().stream()
+                .map(orderMapper::detailDTO)
+                .filter(order -> order.getCustomerId().equals(customerId))
+                .collect(Collectors.toList());
     }
 
-    private List<ItemGroup> assignShippingDates(List<ItemGroup> orderItems){
+    public OrderDto getOrderDetailsById(String id) {
+        return orderMapper.detailDTO(orderRepository.getOrder(id));
 
-        for(ItemGroup itemGroup : orderItems){
-            if(checkIfItemInStock(itemGroup)){
-                itemGroup.setShippingDate(LocalDate.now().plusDays(1));
-            }
-        }
-        return orderItems;
     }
 
-
-    private double calculateTotalCost(List<ItemGroup> orderItems){
-        return orderItems.stream()
-                .map(itemGroup -> itemRepository.getPrice(itemGroup.getSelectedItemId()) * itemGroup.getAmountOrdered())
-                .reduce(0.0, Double::sum);
+    public OrderDto registerOrder(OrderDto orderDTO) {
+        Order order = orderRepository.save(orderMapper.createOrder(orderDTO));
+        return orderMapper.detailDTO(order);
     }
 
-    private boolean checkIfItemInStock(ItemGroup itemGroup) {
-        return itemRepository.getItemAmountInStock(itemGroup.getSelectedItemId()) >= itemGroup.getAmountOrdered();
-    }
-
-
-    public Collection<Order> getOrderList() {
-        return orderRepository.getAll();
+    public OrderDto placeOrder(String id) {
+        if (!orderRepository.getOrderMap().containsKey(id)) throw new OrderNotFoundException("Order with Isbn " + id );
+        Order order = orderRepository.getOrder(id);
+        return orderMapper.detailDTO(order);
     }
 }

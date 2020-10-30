@@ -1,10 +1,10 @@
 package com.switchfully.hans.order.domain.instances;
 
 public class Address {
-    private String streetName;
-    private String streetNumber;
-    private int postalCode;
-    private String city;
+    private final String streetName;
+    private final String streetNumber;
+    private final int postalCode;
+    private final String city;
 
     public Address(String streetName, String number, int postalCode, String city) {
         this.streetName = streetName;
