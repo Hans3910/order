@@ -3,6 +3,7 @@ package com.switchfully.hans.order.service;
 
 
 import com.switchfully.hans.order.api.dto.CreateOrderDto;
+import com.switchfully.hans.order.api.dto.GetOrderDto;
 import com.switchfully.hans.order.domain.exceptions.CreationFailedException;
 import com.switchfully.hans.order.domain.instances.Order;
 import com.switchfully.hans.order.domain.repositories.CustomerRepository;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -48,6 +50,16 @@ public class OrderService {
         Order newOrder = new Order(customerId, createOrderDto.getItemGroups() , itemService.calculateTotalPrice(createOrderDto));
         addOrder(newOrder);
         return newOrder;
+    }
+
+    public List<GetOrderDto> getAllOrders() {
+        return orderRepository.getAll().stream()
+                .map(order -> new GetOrderDto()
+                        .setOrderId(order.getOrderId())
+                        .setCustomerId(order.getCustomerId())
+                        .setItemGroups(order.getItemGroups())
+                        .setTotalPrice(order.getTotalPrice()))
+                .collect(Collectors.toList());
     }
 }
 

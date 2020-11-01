@@ -15,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/orders")
@@ -47,12 +45,6 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     public Collection<GetOrderDto> getAll() {
         myLogger.info("List of all orders was requested");
-        return orderService.getAll().stream()
-                .map(order -> new GetOrderDto()
-                        .setOrderId(order.getOrderId())
-                        .setCustomerId(order.getCustomerId())
-                        .setItemGroups(order.getItemGroups())
-                        .setTotalPrice(order.getTotalPrice()))
-                .collect(Collectors.toList());
+        return orderService.getAllOrders();
     }
 }

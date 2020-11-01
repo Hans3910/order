@@ -2,7 +2,6 @@ package com.switchfully.hans.order.api.controllers;
 
 import com.switchfully.hans.order.api.dto.CreateItemDto;
 import com.switchfully.hans.order.api.dto.GetItemDto;
-
 import com.switchfully.hans.order.domain.exceptions.NotAnAdminException;
 import com.switchfully.hans.order.domain.instances.Item;
 import com.switchfully.hans.order.domain.repositories.AdminRepository;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Collection;
 
 @RestController
