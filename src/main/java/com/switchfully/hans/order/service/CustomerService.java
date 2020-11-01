@@ -1,6 +1,5 @@
 package com.switchfully.hans.order.service;
 
-import com.switchfully.hans.order.api.CustomerController;
 import com.switchfully.hans.order.api.dto.CreateCustomerDto;
 import com.switchfully.hans.order.api.dto.GetCustomerDto;
 import com.switchfully.hans.order.domain.exceptions.EntityNotFoundException;

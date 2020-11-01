@@ -1,11 +1,10 @@
-package com.switchfully.hans.order.api;
+package com.switchfully.hans.order.api.controllers;
 
 
 import com.switchfully.hans.order.api.dto.CreateOrderDto;
 import com.switchfully.hans.order.api.dto.GetOrderDto;
 
 import com.switchfully.hans.order.domain.exceptions.NotACustomerException;
-import com.switchfully.hans.order.domain.exceptions.NotAnAdminException;
 import com.switchfully.hans.order.domain.instances.Order;
 import com.switchfully.hans.order.domain.repositories.CustomerRepository;
 import com.switchfully.hans.order.service.ItemService;

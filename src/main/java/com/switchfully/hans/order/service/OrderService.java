@@ -2,7 +2,6 @@ package com.switchfully.hans.order.service;
 
 
 
-import com.switchfully.hans.order.api.OrderController;
 import com.switchfully.hans.order.api.dto.CreateOrderDto;
 import com.switchfully.hans.order.domain.exceptions.CreationFailedException;
 import com.switchfully.hans.order.domain.instances.Order;

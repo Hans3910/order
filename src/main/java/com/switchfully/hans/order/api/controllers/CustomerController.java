@@ -1,4 +1,4 @@
-package com.switchfully.hans.order.api;
+package com.switchfully.hans.order.api.controllers;
 
 import com.switchfully.hans.order.api.dto.CreateCustomerDto;
 import com.switchfully.hans.order.api.dto.GetCustomerDto;
