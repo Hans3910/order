@@ -26,10 +26,6 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
-    public void addItem(Item newItem) {
-        itemRepository.addBook(newItem);
-    }
-
     public Collection<Item> getAll() {
         return itemRepository.getAll();
     }

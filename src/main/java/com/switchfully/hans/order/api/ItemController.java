@@ -2,7 +2,7 @@ package com.switchfully.hans.order.api;
 
 import com.switchfully.hans.order.api.dto.CreateItemDto;
 import com.switchfully.hans.order.api.dto.GetItemDto;
-import com.switchfully.hans.order.api.mapper.ItemMapper;
+
 import com.switchfully.hans.order.domain.exceptions.NotAuthorizedException;
 import com.switchfully.hans.order.domain.instances.Item;
 import com.switchfully.hans.order.domain.repositories.AdminRepository;
@@ -39,7 +39,7 @@ public class ItemController {
     @PostMapping
     public Item addNewItem(@RequestBody CreateItemDto newItemDto, @RequestParam(required = false) String adminId) throws NotAuthorizedException {
         adminRepository.checkAdminId(adminId);
-        Item newItem = ItemMapper.convertNewItemDtoToItem(newItemDto);
+        Item newItem = new Item(newItemDto.getName(), newItemDto.getDescription(), newItemDto.getPrice(), newItemDto.getAmountInStock());
         itemService.addNewItem(newItem);
         return newItem;
     }

@@ -30,31 +30,11 @@ public class ItemRepository {
         return new ArrayList<>(items.values());
     }
 
-    public void addBook(Item newItem) {
-        items.put(newItem.getId(), newItem);
-    }
-
     public void addNewItem(Item newItemToAdd){
         items.put(newItemToAdd.getId(), newItemToAdd);
     }
 
-    public Item getItemById(String itemId){
-        return items.get(itemId);
-    }
 
-    public double getPrice(String itemID, int amount) {
-        return (items.get(itemID).getPrice() * amount);
-    }
 
-    public double getStock(String itemID) {
-        return items.get(itemID).getAmountInStock();
-    }
 
-    public double getItemAmountInStock(String itemId){
-        return items.get(itemId).getAmountInStock();
-    }
-
-    public void checkItemId(String itemID) {
-        if(!items.containsKey(itemID)) throw new EntityNotFoundException(Item.class, "Item id does not exist", itemID);
-    }
 }

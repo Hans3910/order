@@ -1,9 +1,8 @@
 package com.switchfully.hans.order.api;
 
 
+import com.switchfully.hans.order.api.dto.CreateOrderDto;
 import com.switchfully.hans.order.api.dto.GetOrderDto;
-import com.switchfully.hans.order.api.dto.OrderDto;
-import com.switchfully.hans.order.domain.exceptions.CreationFailedException;
 import com.switchfully.hans.order.domain.instances.ItemGroup;
 import com.switchfully.hans.order.domain.instances.Order;
 import com.switchfully.hans.order.service.OrderService;
@@ -22,6 +21,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(path = "/orders")
 public class OrderController {
+    private final Logger myLogger = LoggerFactory.getLogger(OrderController.class);
     private final OrderService orderService;
 
     @Autowired
@@ -29,36 +29,25 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createOrder(@RequestBody CreateOrderDto createOrderDto) {
+        myLogger.info("Creation of new order requested");
+        Order newOrder = new Order(createOrderDto.getCustomerId(), createOrderDto.getItemGroups(), 0.0, LocalDate.now());
+        orderService.addOrder(newOrder);
+    }
+
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public List<OrderDto> adminViewsAllOrders() {
-        return orderService.getAllOrderDTOs();
-    }
-
-    @GetMapping(path = "/customer", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.OK)
-    public List<OrderDto> customerViewsAllHisOrders(@PathVariable String customerId) {
-        return orderService.getAllMyOrderDTOs(customerId);
-    }
-
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public Order createNewOrder(@RequestBody OrderDto orderDTO, @RequestParam String customerId) {
-        Order newOrder = new Order(customerId);
-        double totalCost = 0;
-        for (ItemGroup itemGroup : orderDTO.getItemGroups()) {
-            newOrder.getItemGroups().add(itemGroup);
-            totalCost += itemGroup.getPrice() * itemGroup.getAmount();
-        }
-        newOrder.setItemGroups(orderDTO.getItemGroups());
-        newOrder.setTotalPrice(totalCost);
-        orderService.registerOrder(orderDTO);
-        return newOrder;
-    }
-
-    @PutMapping(path = "/customer/place-order/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public OrderDto updateOrderStatusFromCreatedToOrdered(@PathVariable String id) {
-        return orderService.placeOrder(id);
+    public Collection<GetOrderDto> getAll() {
+        myLogger.info("List of all orders was requested");
+        return orderService.getAll().stream()
+                .map(order -> new GetOrderDto()
+                        .setOrderId(order.getOrderId())
+                        .setCustomerId(order.getCustomerId())
+                        .setItemGroups(order.getItemGroups())
+                        .setTotalPrice(order.getTotalPrice())
+                        .setShippingDate(order.getShippingDate()))
+                .collect(Collectors.toList());
     }
 }
