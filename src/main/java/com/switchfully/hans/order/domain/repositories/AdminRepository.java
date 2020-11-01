@@ -1,7 +1,6 @@
 package com.switchfully.hans.order.domain.repositories;
 
-import com.switchfully.hans.order.api.CustomerController;
-import com.switchfully.hans.order.domain.exceptions.NotAuthorizedException;
+import com.switchfully.hans.order.domain.exceptions.NotAnAdminException;
 import com.switchfully.hans.order.domain.instances.Admin;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,9 +31,9 @@ public class AdminRepository {
         return administrators;
     }
 
-    public void checkAdminId(@RequestParam(required = false) String adminId) throws NotAuthorizedException {
+    public void checkAdminId(@RequestParam(required = false) String adminId) throws NotAnAdminException {
         if (adminId == null || adminId.isBlank() || !getAdministrators().containsKey(adminId)) {
-            throw new NotAuthorizedException(Admin.class, "adminId", adminId);
+            throw new NotAnAdminException(Admin.class, "adminId", adminId);
         }
     }
 }

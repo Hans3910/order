@@ -2,7 +2,7 @@ package com.switchfully.hans.order.api;
 
 import com.switchfully.hans.order.api.dto.CreateCustomerDto;
 import com.switchfully.hans.order.api.dto.GetCustomerDto;
-import com.switchfully.hans.order.domain.exceptions.NotAuthorizedException;
+import com.switchfully.hans.order.domain.exceptions.NotAnAdminException;
 import com.switchfully.hans.order.domain.instances.Customer;
 import com.switchfully.hans.order.domain.repositories.AdminRepository;
 import org.slf4j.Logger;
@@ -30,7 +30,7 @@ public class CustomerController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public Collection<GetCustomerDto> getAllCustomers(@RequestParam(required = false) String adminId) throws NotAuthorizedException {
+    public Collection<GetCustomerDto> getAllCustomers(@RequestParam(required = false) String adminId) throws NotAnAdminException {
         adminRepository.checkAdminId(adminId);
         logger.info("List of customers requested");
         return customerService.getCustomerList();
@@ -46,7 +46,7 @@ public class CustomerController {
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public GetCustomerDto getById(@PathVariable String id, @RequestParam(required = false) String adminId) throws NotAuthorizedException {
+    public GetCustomerDto getById(@PathVariable String id, @RequestParam(required = false) String adminId) throws NotAnAdminException {
         adminRepository.checkAdminId(adminId);
         Customer customer = customerService.getById(id);
         logger.info("Customer requested with id {}", customer.getId());

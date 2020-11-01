@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-public class NotAuthorizedException extends Exception {
-    public NotAuthorizedException(Class clazz, String... searchParamsMap) {
-        super(NotAuthorizedException.generateMessage(clazz.getSimpleName(), toMap(String.class, String.class, searchParamsMap)));
+public class NotAnAdminException extends RuntimeException {
+    public NotAnAdminException(Class clazz, String... searchParamsMap) {
+        super(NotAnAdminException.generateMessage(clazz.getSimpleName(), toMap(String.class, String.class, searchParamsMap)));
     }
 
     private static String generateMessage(String entity, Map<String, String> searchParams) {

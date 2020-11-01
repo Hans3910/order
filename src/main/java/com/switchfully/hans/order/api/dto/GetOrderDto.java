@@ -2,9 +2,6 @@ package com.switchfully.hans.order.api.dto;
 
 
 import com.switchfully.hans.order.domain.instances.ItemGroup;
-
-import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 
 public class GetOrderDto {
@@ -12,16 +9,6 @@ public class GetOrderDto {
     private String customerId;
     private List<ItemGroup> itemGroups;
     private double totalPrice;
-    private LocalDate shippingDate;
-
-    public LocalDate getShippingDate() {
-        return shippingDate;
-    }
-
-    public GetOrderDto setShippingDate(LocalDate shippingDate) {
-        this.shippingDate = shippingDate;
-        return this;
-    }
 
     public String getOrderId() {
         return orderId;

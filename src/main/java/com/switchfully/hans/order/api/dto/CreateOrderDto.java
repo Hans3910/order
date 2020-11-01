@@ -1,10 +1,8 @@
 package com.switchfully.hans.order.api.dto;
 
+
 import com.switchfully.hans.order.domain.instances.ItemGroup;
-
-
 import java.util.List;
-
 
 public class CreateOrderDto {
     private String customerId;

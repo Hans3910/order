@@ -1,5 +1,6 @@
 package com.switchfully.hans.order.domain.repositories;
 
+import com.switchfully.hans.order.domain.exceptions.CreationFailedException;
 import com.switchfully.hans.order.domain.exceptions.EntityNotFoundException;
 import com.switchfully.hans.order.domain.instances.Item;
 import org.springframework.stereotype.Repository;
@@ -30,11 +31,21 @@ public class ItemRepository {
         return new ArrayList<>(items.values());
     }
 
+    public Map<String, Item> getItems() {
+        return items;
+    }
+
     public void addNewItem(Item newItemToAdd){
         items.put(newItemToAdd.getId(), newItemToAdd);
     }
 
+    public Item getItemById(String itemId){
+        return items.get(itemId);
+    }
 
-
-
+    public void checkItemId(String itemId){
+        if(!getItems().containsKey(itemId)){
+            throw new CreationFailedException(Item.class, "itemId", itemId);
+        }
+    }
 }

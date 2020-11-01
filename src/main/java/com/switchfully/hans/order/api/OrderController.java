@@ -3,8 +3,12 @@ package com.switchfully.hans.order.api;
 
 import com.switchfully.hans.order.api.dto.CreateOrderDto;
 import com.switchfully.hans.order.api.dto.GetOrderDto;
-import com.switchfully.hans.order.domain.instances.ItemGroup;
+
+import com.switchfully.hans.order.domain.exceptions.NotACustomerException;
+import com.switchfully.hans.order.domain.exceptions.NotAnAdminException;
 import com.switchfully.hans.order.domain.instances.Order;
+import com.switchfully.hans.order.domain.repositories.CustomerRepository;
+import com.switchfully.hans.order.service.ItemService;
 import com.switchfully.hans.order.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -23,18 +25,23 @@ import java.util.stream.Collectors;
 public class OrderController {
     private final Logger myLogger = LoggerFactory.getLogger(OrderController.class);
     private final OrderService orderService;
+    private final ItemService itemService;
+    private final CustomerRepository customerRepository;
 
     @Autowired
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, ItemService itemService, CustomerRepository customerRepository) {
         this.orderService = orderService;
+        this.itemService = itemService;
+        this.customerRepository = customerRepository;
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void createOrder(@RequestBody CreateOrderDto createOrderDto) {
-        myLogger.info("Creation of new order requested");
-        Order newOrder = new Order(createOrderDto.getCustomerId(), createOrderDto.getItemGroups(), 0.0, LocalDate.now());
-        orderService.addOrder(newOrder);
+    public Order createOrder(@RequestBody CreateOrderDto createOrderDto, @RequestParam String customerId) throws NotACustomerException {
+        customerRepository.checkCustomerId(customerId);
+        myLogger.info("Creating new order");
+        return orderService.createNewOrder(createOrderDto, customerId);
+
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -46,8 +53,7 @@ public class OrderController {
                         .setOrderId(order.getOrderId())
                         .setCustomerId(order.getCustomerId())
                         .setItemGroups(order.getItemGroups())
-                        .setTotalPrice(order.getTotalPrice())
-                        .setShippingDate(order.getShippingDate()))
+                        .setTotalPrice(order.getTotalPrice()))
                 .collect(Collectors.toList());
     }
 }
